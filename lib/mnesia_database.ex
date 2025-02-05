@@ -35,6 +35,9 @@ defmodule MnesiaDatabase do
     :ok
   end
 
+  def clear_messages_table(), do: 
+    :mnesia.clear_table(:message)
+
 #############################################################################################
 
   defp init_tables() do 
