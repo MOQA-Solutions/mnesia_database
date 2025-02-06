@@ -8,8 +8,14 @@ defmodule MnesiaDatabase.Requests do
   def immediate_query(:all_keys, table), do:  
     Query.all_keys(table)
 
+  def immediate_query(:first_key, table), do:  
+    Query.first_key(table)
+
   def immediate_query(:delete_record, record), do:  
     Query.delete_record(record)
+
+  def immediate_query(:next_key, table, key), do: 
+    Query.next_key(table, key)
 
   def immediate_query(:read, table, key), do: 
     Query.read_data(table, key)

@@ -21,6 +21,12 @@ defmodule MnesiaDatabase.Query do
   def all_keys(table), do:
            :mnesia.activity(:async_dirty, &(:mnesia.all_keys/1), [table], :mnesia_frag)
 
+  def first_key(table), do:
+           :mnesia.activity(:async_dirty, &(:mnesia.first/1), [table], :mnesia_frag)
+
+  def next_key(table, key), do:
+           :mnesia.activity(:async_dirty, &(:mnesia.next/2), [table, key], :mnesia_frag)
+
   def transaction(fun, args), do: 
            :mnesia.activity(:transaction, fun, args, :mnesia_frag)
 

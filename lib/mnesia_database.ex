@@ -23,6 +23,12 @@ defmodule MnesiaDatabase do
   def all_keys(table), do: 
     Requests.immediate_query(:all_keys, table)
 
+  def first_key(table), do: 
+    Requests.immediate_query(:first_key, table)
+
+  def next_key(table, key), do:  
+    Requests.immediate_query(:next_key, table, key)
+
   def create_database() do
     init_tables() 
     :ok
