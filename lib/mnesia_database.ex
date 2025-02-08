@@ -44,10 +44,27 @@ defmodule MnesiaDatabase do
   def clear_messages_table(), do: 
     :mnesia.clear_table(:message)
 
+  def create_table?(email) do
+    current_tables = :mnesia.system_info(:local_tables)
+    if Enum.member?(current_tables, email) do 
+      :ok 
+    else 
+      :mnesia.create_table(
+                            email, 
+                            [
+                              {:attributes, [:id, :other]}, 
+                              {:rocksdb_copies, [node()]}
+                            ]
+                            ) 
+    end 
+    :ok
+  end
+
 #############################################################################################
 
   defp init_tables() do 
     {:atomic, :ok} = init_messages_table() 
+    {:atomic, :ok} = init_imap_presences_table()
   end 
 
   defp init_messages_table(), do:   
@@ -59,6 +76,16 @@ defmodule MnesiaDatabase do
                             }, 
 
                             {:rocksdb_copies, [node()]} 
+                          ] 
+                        ) 
+
+  defp init_imap_presences_table(), do:   
+    :mnesia.create_table(
+                          :imap_presence, 
+                          [
+                            {:attributes, [:email, :pid]}, 
+                            {:index, [:pid]},
+                            {:ram_copies, [node()]} 
                           ] 
                         ) 
 
