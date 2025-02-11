@@ -41,8 +41,10 @@ defmodule MnesiaDatabase do
     :ok
   end
 
-  def clear_messages_table(), do: 
-    :mnesia.clear_table(:message)
+  def clear_database(), do:
+    :mnesia.system_info(:local_tables) 
+    |> List.delete(:schema)
+    |> Enum.each(fn(table) -> :mnesia.clear_table(table) end)
 
   def create_table?(email) do
     current_tables = :mnesia.system_info(:local_tables)
