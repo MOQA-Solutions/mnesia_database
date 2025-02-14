@@ -85,7 +85,7 @@ defmodule MnesiaDatabase do
     :mnesia.create_table(
                           :imap_presence, 
                           [
-                            {:attributes, [:email, :pid]}, 
+                            {:attributes, [:email, :pid, :state, :reason]}, 
                             {:index, [:pid]},
                             {:ram_copies, [node()]} 
                           ] 
