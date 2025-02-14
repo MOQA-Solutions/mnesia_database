@@ -37,7 +37,8 @@ defmodule MnesiaDatabase do
   def start() do 
     :mnesia.stop() 
     :mnesia.start() 
-    :mnesia_rocksdb.register() 
+    :mnesia_rocksdb.register()
+    :ok = maybe_create_database()
     :ok
   end
 
@@ -91,4 +92,14 @@ defmodule MnesiaDatabase do
                           ] 
                         ) 
 
+  defp maybe_create_database() do 
+    :mnesia.system_info(:local_tables) 
+    |> List.delete(:schema)  
+    |> case do
+         [] -> 
+           create_database() 
+         _ -> 
+           :ok 
+       end
+  end
 end
