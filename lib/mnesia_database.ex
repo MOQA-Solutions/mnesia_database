@@ -29,11 +29,6 @@ defmodule MnesiaDatabase do
   def next_key(table, key), do:  
     Requests.immediate_query(:next_key, table, key)
 
-  def create_database() do
-    init_tables() 
-    :ok
-  end 
-
   def start() do 
     :mnesia.stop() 
     :mnesia.start() 
@@ -42,26 +37,15 @@ defmodule MnesiaDatabase do
     :ok
   end
 
+  def create_database() do
+    init_tables() 
+    :ok
+  end 
+
   def clear_database(), do:
     :mnesia.system_info(:local_tables) 
     |> List.delete(:schema)
     |> Enum.each(fn(table) -> :mnesia.clear_table(table) end)
-
-  def create_table?(email) do
-    current_tables = :mnesia.system_info(:local_tables)
-    if Enum.member?(current_tables, email) do 
-      :ok 
-    else 
-      :mnesia.create_table(
-                            email, 
-                            [
-                              {:attributes, [:id, :other]}, 
-                              {:rocksdb_copies, [node()]}
-                            ]
-                            ) 
-    end 
-    :ok
-  end
 
 #############################################################################################
 
@@ -75,8 +59,12 @@ defmodule MnesiaDatabase do
                           :message, 
                           [
                             {:attributes, 
-                              [:id, :from, :to, :cc, :subject, :date, :body]
+                              [:id, :owner, :from, :to, :cc, :subject, :date, :body]
                             }, 
+
+                            {:index, 
+                              [:owner]
+                            },
 
                             {:rocksdb_copies, [node()]} 
                           ] 
